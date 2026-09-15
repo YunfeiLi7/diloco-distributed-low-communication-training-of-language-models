@@ -70,8 +70,21 @@ def cross_entropy_loss(logits, labels):
 # Step 6 - model_backward (not yet solved)
 # TODO: implement
 
-# Step 7 - init_adamw_state (not yet solved)
-# TODO: implement
+# Step 7 - init_adamw_state
+def init_adamw_state(params):
+    # TODO: Build the AdamW state dict with zeroed first/second moments and t=0.
+    m = {}
+    v = {}
+    for key , value in params.items():
+        m[key] = np.zeros_like(value)
+        v[key] = np.zeros_like(value)
+    
+    return {
+        'm':m,
+        'v':v,
+        't':0
+    }
+    pass
 
 # Step 8 - update_adam_moments (not yet solved)
 # TODO: implement
