@@ -86,8 +86,27 @@ def init_adamw_state(params):
     }
     pass
 
-# Step 8 - update_adam_moments (not yet solved)
-# TODO: implement
+# Step 8 - update_adam_moments
+def update_adam_moments(state, grads, beta1, beta2):
+    # TODO: increment state['t'] and update first/second moment EMAs for each param key.
+    m=state['m']
+    v=state['v']
+    t=state['t']
+    t=t+1
+    new_m={}
+    new_v={}
+    for key , value in m.items():
+        new_m[key]=beta1*m[key] + (1-beta1)*grads[key]
+
+    for key ,value in v.items():
+        new_v[key]=beta2*v[key]+ (1-beta2)*grads[key]**2
+
+    return {
+        'm':new_m,
+        'v':new_v,
+        't':t
+    }
+    pass
 
 # Step 9 - bias_correct_moments (not yet solved)
 # TODO: implement
