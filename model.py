@@ -127,8 +127,17 @@ def bias_correct_moments(state, beta1, beta2):
     
     pass
 
-# Step 10 - adam_param_step (not yet solved)
-# TODO: implement
+# Step 10 - adam_param_step
+def adam_param_step(params, m_hat, v_hat, lr, eps):
+    # TODO: return new params updated by p - lr * m_hat / (sqrt(v_hat) + eps) elementwise.
+    new_params={}
+    for key in params:
+        new_params[key]=(
+            params[key]-lr*m_hat[key]/(np.sqrt(v_hat[key])+eps)
+        )
+    
+    return new_params
+    pass
 
 # Step 11 - decoupled_weight_decay (not yet solved)
 # TODO: implement
