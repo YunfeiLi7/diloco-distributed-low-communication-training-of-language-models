@@ -48,8 +48,16 @@ def model_forward(params, x):
     return logits,cache
     pass
 
-# Step 4 - softmax (not yet solved)
-# TODO: implement
+# Step 4 - softmax
+import numpy as np
+
+def softmax(logits):
+    # TODO: return a row-wise, numerically-stable softmax of logits with shape (N, C).
+    M=np.max(logits,axis=-1,keepdims=True)
+    shifted=logits-M 
+    soft_logits=np.exp(shifted)/np.sum(np.exp(shifted),axis=-1,keepdims=True)
+    return soft_logits
+    pass
 
 # Step 5 - cross_entropy_loss (not yet solved)
 # TODO: implement
