@@ -29,8 +29,24 @@ def relu(x):
     # TODO: return an array of the same shape as x with negatives clipped to 0.
     return np.maximum(0.0,x)
 
-# Step 3 - model_forward (not yet solved)
-# TODO: implement
+# Step 3 - model_forward
+import numpy as np
+
+def model_forward(params, x):
+    """Run the 2-layer MLP forward pass and stash intermediates for backprop."""
+    # TODO: compute z1, h1 = relu(z1), logits, and return (logits, cache).
+    z=x @ params['W1'] + params['b1']
+    hidden = np.maximum(0.0,z)
+    logits=hidden @ params['W2'] + params['b2']
+    cache= {
+        'h1': hidden,
+        'logits': logits,
+        'x':x,
+        'z1': z
+    }
+
+    return logits,cache
+    pass
 
 # Step 4 - softmax (not yet solved)
 # TODO: implement
