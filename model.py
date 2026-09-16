@@ -139,8 +139,18 @@ def adam_param_step(params, m_hat, v_hat, lr, eps):
     return new_params
     pass
 
-# Step 11 - decoupled_weight_decay (not yet solved)
-# TODO: implement
+# Step 11 - decoupled_weight_decay
+import numpy as np
+
+def decoupled_weight_decay(params, lr, weight_decay):
+    # TODO: return a new params dict where each tensor is shrunk by AdamW's decoupled weight decay factor.
+    new_param={}
+    for key in params:
+        new_param[key]=params[key]*(1-lr*weight_decay)
+    
+    return new_param
+
+    pass
 
 # Step 12 - clone_params (not yet solved)
 # TODO: implement
