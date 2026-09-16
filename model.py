@@ -10,8 +10,8 @@ import numpy as np
 def init_model_params(input_dim, hidden_dim, output_dim, seed=0):
     # TODO: return dict with W1 (in,hid), b1 (hid,), W2 (hid,out), b2 (out,) as float64
     rng=np.random.default_rng(seed)
-    W1=rng.normal(size=(input_dim,hidden_dim)).astype(np.float64)
-    W2=rng.normal(size=(hidden_dim,output_dim)).astype(np.float64)
+    W1=rng.normal(size=(input_dim,hidden_dim))* np.sqrt(2.0 / input_dim)
+    W2=rng.normal(size=(hidden_dim,output_dim))* np.sqrt(2.0 / hidden_dim)
     b1=np.zeros((hidden_dim,)).astype(np.float64)
     b2=np.zeros((output_dim,)).astype(np.float64)
     return {
@@ -362,8 +362,12 @@ def compute_outer_gradient(global_params, worker_params_list):
 # Step 27 - train_synchronous_baseline (not yet solved)
 # TODO: implement
 
-# Step 28 - evaluate_loss (not yet solved)
-# TODO: implement
+# Step 28 - evaluate_loss
+def evaluate_loss(params, x, y):
+    # TODO: return the mean cross-entropy loss of the model on the held-out data (x, y).
+    logits, _ =model_forward(params,x)
+    loss = cross_entropy_loss(logits, y)
+    return float(loss)
 
 # Step 29 - classification_accuracy (not yet solved)
 # TODO: implement
