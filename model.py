@@ -191,8 +191,26 @@ def average_params(params_list):
     
     return new_params
 
-# Step 16 - iid_shard_dataset (not yet solved)
-# TODO: implement
+# Step 16 - iid_shard_dataset
+def iid_shard_dataset(x, y, num_workers, seed=0):
+    # TODO: partition (x, y) uniformly at random into num_workers disjoint IID shards.
+    N=len(y)
+    rng =np.random.default_rng(seed)
+    indices=rng.permutation(N)
+    shards=[]
+    base_num=N//num_workers
+    rest=N%num_workers
+
+    pointer=0
+    for i in range(num_workers):
+        size=base_num + (1 if i<rest else 0)
+        idx=indices[pointer:pointer+size]
+        x_shard=x[idx]
+        y_shard=y[idx]
+        shards.append((x_shard,y_shard))
+        pointer+=size
+
+    return shards
 
 # Step 17 - noniid_shard_dataset (not yet solved)
 # TODO: implement
