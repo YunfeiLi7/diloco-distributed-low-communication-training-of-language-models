@@ -152,8 +152,14 @@ def decoupled_weight_decay(params, lr, weight_decay):
 
     pass
 
-# Step 12 - clone_params (not yet solved)
-# TODO: implement
+# Step 12 - clone_params
+def clone_params(params):
+    # TODO: return a new dict whose values are independent copies of the input arrays.
+    new_params={}
+    for key in params:
+        new_params[key]=params[key].copy()
+    return new_params
+    pass
 
 # Step 13 - scale_params (not yet solved)
 # TODO: implement
