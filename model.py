@@ -212,8 +212,27 @@ def iid_shard_dataset(x, y, num_workers, seed=0):
 
     return shards
 
-# Step 17 - noniid_shard_dataset (not yet solved)
-# TODO: implement
+# Step 17 - noniid_shard_dataset
+def noniid_shard_dataset(x, y, num_workers, num_classes, seed=0):
+    # TODO: partition (x, y) across workers so each worker owns a distinct subset of classes.
+    rng=np.random.default_rng(seed)
+    work_indices=[[]for _ in range(num_workers)]
+    for i in range(len(y)):
+        c=y[i]
+        idx=c % num_workers
+        work_indices[idx].append(i)
+
+    shards=[]
+
+    for i in range(num_workers):
+        idx=np.array(work_indices[i])
+        idx=rng.permutation(idx)
+        x_=x[idx]
+        y_=y[idx]
+        shards.append((x_,y_))
+    
+
+    return shards
 
 # Step 18 - sample_worker_batch (not yet solved)
 # TODO: implement
