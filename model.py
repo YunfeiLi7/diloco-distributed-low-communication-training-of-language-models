@@ -157,7 +157,7 @@ def clone_params(params):
     # TODO: return a new dict whose values are independent copies of the input arrays.
     new_params={}
     for key in params:
-        new_params[key]=params[key].copy()
+        new_params[key]=params[key]*1
     return new_params
     pass
 
