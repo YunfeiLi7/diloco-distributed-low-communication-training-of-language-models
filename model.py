@@ -294,8 +294,19 @@ def local_train_step(params, adam_state, x_batch, y_batch, lr, beta1, beta2, eps
     decay_params=decoupled_weight_decay(params=new_params, lr=lr, weight_decay=weight_decay)
     return decay_params , adam_now_state ,loss
 
-# Step 20 - inner_train_worker (not yet solved)
-# TODO: implement
+# Step 20 - inner_train_worker
+def inner_train_worker(params, x_shard, y_shard, num_inner_steps, batch_size, lr, beta1, beta2, eps, weight_decay, seed):
+    # TODO: run num_inner_steps AdamW updates on this worker's shard from a copy of params
+    rng=np.random.default_rng(seed)
+    worker_params=clone_params(params=params)
+    adam_state=init_adamw_state(params=params)
+    mean_loss=0.0
+    for i in range(num_inner_steps):
+        x_batch,y_batch=sample_worker_batch(x_shard=x_shard, y_shard=y_shard, batch_size=batch_size, rng=rng)
+        params , adam_state ,loss=local_train_step(params=params, adam_state=adam_state, x_batch=x_batch, y_batch=y_batch, lr=lr, beta1=beta1, beta2=beta2, eps=eps, weight_decay=weight_decay)
+        mean_loss+=loss
+    mean_loss/=num_inner_steps
+    return params , mean_loss
 
 # Step 21 - init_outer_optimizer (not yet solved)
 # TODO: implement
