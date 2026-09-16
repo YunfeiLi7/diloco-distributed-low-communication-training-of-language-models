@@ -246,7 +246,7 @@ def sample_worker_batch(x_shard, y_shard, batch_size, rng):
     x_=x_shard[idx]
     y_=y_shard[idx]
 
-    return x_,y_
+    return (x_,y_)
 
 # Step 19 - local_train_step (not yet solved)
 # TODO: implement
