@@ -299,7 +299,7 @@ def inner_train_worker(params, x_shard, y_shard, num_inner_steps, batch_size, lr
     # TODO: run num_inner_steps AdamW updates on this worker's shard from a copy of params
     rng=np.random.default_rng(seed)
     worker_params=clone_params(params=params)
-    adam_state=init_adamw_state(params=params)
+    adam_state=init_adamw_state(params=worker_params)
     mean_loss=0.0
     for i in range(num_inner_steps):
         x_batch,y_batch=sample_worker_batch(x_shard=x_shard, y_shard=y_shard, batch_size=batch_size, rng=rng)
