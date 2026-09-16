@@ -282,8 +282,17 @@ def sample_worker_batch(x_shard, y_shard, batch_size, rng):
 
     return (x_,y_)
 
-# Step 19 - local_train_step (not yet solved)
-# TODO: implement
+# Step 19 - local_train_step
+def local_train_step(params, adam_state, x_batch, y_batch, lr, beta1, beta2, eps, weight_decay):
+    # TODO: one AdamW update: forward, loss, backward, moment update, param step, weight decay.
+    logits,cache=model_forward(params=params,x=x_batch)
+    loss=cross_entropy_loss(logits=logits, labels=y_batch)
+    grads=model_backward(params=params, cache=cache, labels=y_batch)
+    adam_now_state=update_adam_moments(state=adam_state, grads=grads, beta1=beta1, beta2=beta2)
+    m_hat,v_hat=bias_correct_moments(state=adam_now_state, beta1=beta1, beta2=beta2)
+    new_params=adam_param_step(params=params, m_hat=m_hat, v_hat=v_hat, lr=lr, eps=eps)
+    decay_params=decoupled_weight_decay(params=new_params, lr=lr, weight_decay=weight_decay)
+    return decay_params , adam_now_state ,loss
 
 # Step 20 - inner_train_worker (not yet solved)
 # TODO: implement
