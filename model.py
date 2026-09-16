@@ -178,8 +178,18 @@ def subtract_params(params_a, params_b):
     
     return new_params
 
-# Step 15 - average_params (not yet solved)
-# TODO: implement
+# Step 15 - average_params
+def average_params(params_list):
+    # TODO: return a new dict whose value at each key is the element-wise mean across the input dicts.
+    new_params={}
+    for key in params_list[0]:
+        new_params[key]=np.zeros_like(params_list[0][key])
+        for params in params_list:
+            new_params[key]+=params[key]
+
+        new_params[key]=new_params[key]/len(params_list)
+    
+    return new_params
 
 # Step 16 - iid_shard_dataset (not yet solved)
 # TODO: implement
