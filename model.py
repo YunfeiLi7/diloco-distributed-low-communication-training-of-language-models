@@ -67,8 +67,42 @@ def cross_entropy_loss(logits, labels):
     loss =  -np.sum(np.log(prob))/len(labels)
     return loss
 
-# Step 6 - model_backward (not yet solved)
-# TODO: implement
+# Step 6 - model_backward
+def model_backward(params, cache, labels):
+    x = cache["x"]
+    z1 = cache["z1"]
+    h1 = cache["h1"]
+    logits = cache["logits"]
+
+    N = labels.shape[0]
+
+    # 1. softmax + cross entropy 对 logits 的梯度
+    probs = softmax(logits)
+
+    dlogits = probs.copy()
+    dlogits[np.arange(N), labels] -= 1.0
+    dlogits /= N
+
+    # 2. 输出层: logits = h1 @ W2 + b2
+    dW2 = h1.T @ dlogits
+    db2 = np.sum(dlogits, axis=0)
+
+    # 3. 反传到隐藏层
+    dh1 = dlogits @ params["W2"].T
+
+    # 4. 通过 ReLU
+    dz1 = dh1 * (z1 > 0)
+
+    # 5. 输入层: z1 = x @ W1 + b1
+    dW1 = x.T @ dz1
+    db1 = np.sum(dz1, axis=0)
+
+    return {
+        "W1": dW1,
+        "b1": db1,
+        "W2": dW2,
+        "b2": db2,
+    }
 
 # Step 7 - init_adamw_state
 def init_adamw_state(params):
