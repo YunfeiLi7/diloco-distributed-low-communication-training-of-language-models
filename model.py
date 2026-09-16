@@ -334,8 +334,16 @@ def update_outer_momentum(outer_state, outer_grad, momentum_coef):
         "momentum":new_momentum
     }
 
-# Step 23 - nesterov_param_update (not yet solved)
-# TODO: implement
+# Step 23 - nesterov_param_update
+def nesterov_param_update(params, outer_state, outer_grad, outer_lr, momentum_coef):
+    # TODO: apply the Nesterov look-ahead step using the (already-updated) momentum buffer and outer_grad.
+    new_params={}
+    
+    for key in params:
+        direction=outer_grad[key]+momentum_coef*outer_state[key]
+        new_params[key]=params[key]-outer_lr*direction
+
+    return new_params
 
 # Step 24 - compute_outer_gradient (not yet solved)
 # TODO: implement
