@@ -303,7 +303,7 @@ def inner_train_worker(params, x_shard, y_shard, num_inner_steps, batch_size, lr
     mean_loss=0.0
     for i in range(num_inner_steps):
         x_batch,y_batch=sample_worker_batch(x_shard=x_shard, y_shard=y_shard, batch_size=batch_size, rng=rng)
-        params , adam_state ,loss=local_train_step(params=params, adam_state=adam_state, x_batch=x_batch, y_batch=y_batch, lr=lr, beta1=beta1, beta2=beta2, eps=eps, weight_decay=weight_decay)
+        worker_params , adam_state ,loss=local_train_step(params=worker_params, adam_state=adam_state, x_batch=x_batch, y_batch=y_batch, lr=lr, beta1=beta1, beta2=beta2, eps=eps, weight_decay=weight_decay)
         mean_loss+=loss
     mean_loss/=num_inner_steps
     return params , mean_loss
