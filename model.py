@@ -369,8 +369,13 @@ def evaluate_loss(params, x, y):
     loss = cross_entropy_loss(logits, y)
     return float(loss)
 
-# Step 29 - classification_accuracy (not yet solved)
-# TODO: implement
+# Step 29 - classification_accuracy
+def classification_accuracy(params, x, y):
+    # TODO: return top-1 accuracy of the 2-layer MLP on (x, y) as a float in [0, 1].
+    logits , _ =model_forward(params,x)
+    y_max=np.argmax(logits,axis=-1)
+    accuracy=np.sum(y_max==y)/len(y)
+    return float(accuracy)
 
 # Step 30 - communication_savings (not yet solved)
 # TODO: implement
