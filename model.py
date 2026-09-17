@@ -377,6 +377,18 @@ def classification_accuracy(params, x, y):
     accuracy=np.sum(y_max==y)/len(y)
     return float(accuracy)
 
-# Step 30 - communication_savings (not yet solved)
-# TODO: implement
+# Step 30 - communication_savings
+def communication_savings(num_rounds, num_inner_steps, num_workers, param_count):
+    # TODO: count scalars transmitted under DiLoCo vs a fully synchronous baseline and return the ratio.
+    per_step=2*num_workers*param_count
+    diloco_scalars=per_step*num_rounds
+    sync_scalars=diloco_scalars*num_inner_steps
+    ratio=float(1.0/num_inner_steps)
+    savings_factor=num_inner_steps
+    return {
+        'diloco_scalars':diloco_scalars,
+        'sync_scalars':sync_scalars,
+        'ratio':ratio,
+        'savings_factor':savings_factor
+    }
 
