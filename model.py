@@ -394,8 +394,19 @@ def run_diloco_round(global_params, outer_state, worker_shards, num_inner_steps,
     )
     return new_global_params, outer_state, worker_losses
 
-# Step 26 - train_diloco (not yet solved)
-# TODO: implement
+# Step 26 - train_diloco
+def train_diloco(init_params, worker_shards, num_rounds, num_inner_steps, batch_size, inner_hparams, outer_lr, momentum_coef, seed=0):
+    global_params=clone_params(init_params)
+    outer_state=init_outer_optimizer(global_params)
+    history={
+        'round_losses':[]
+    }
+    for run_idx in range(num_rounds):
+        global_params, outer_state, worker_losses=run_diloco_round(global_params, outer_state, worker_shards, num_inner_steps, batch_size, inner_hparams, outer_lr, momentum_coef, seed)
+        round_losses=float(np.mean(worker_losses))
+        history['round_losses'].append(round_losses)
+
+    return global_params , history
 
 # Step 27 - train_synchronous_baseline (not yet solved)
 # TODO: implement
