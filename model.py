@@ -411,8 +411,97 @@ def train_diloco(init_params, worker_shards, num_rounds, num_inner_steps, batch_
 
     return global_params , history
 
-# Step 27 - train_synchronous_baseline (not yet solved)
-# TODO: implement
+# Step 27 - train_synchronous_baseline
+def train_synchronous_baseline(
+    init_params,
+    worker_shards,
+    num_steps,
+    batch_size,
+    inner_hparams,
+    seed=0
+):
+    # 共享模型的独立副本
+    params = clone_params(init_params)
+
+    # 唯一一份共享 AdamW state
+    adam_state = init_adamw_state(params)
+
+    # 整个训练只使用一个 RNG
+    rng = np.random.default_rng(seed)
+
+    history = {
+        "step_losses": []
+    }
+
+    for step in range(num_steps):
+
+        worker_grads = []
+        worker_losses = []
+
+        # 所有 worker 都基于同一个当前 params 算梯度
+        for x_shard, y_shard in worker_shards:
+
+            x_batch, y_batch = sample_worker_batch(
+                x_shard,
+                y_shard,
+                batch_size,
+                rng
+            )
+
+            logits, cache = model_forward(
+                params,
+                x_batch
+            )
+
+            loss = cross_entropy_loss(
+                logits,
+                y_batch
+            )
+
+            grads = model_backward(
+                params,
+                cache,
+                y_batch
+            )
+
+            worker_grads.append(grads)
+            worker_losses.append(loss)
+
+        # 多 worker 梯度平均
+        avg_grads = average_params(worker_grads)
+
+        # 一次共享 AdamW update
+        adam_state = update_adam_moments(
+            adam_state,
+            avg_grads,
+            inner_hparams["beta1"],
+            inner_hparams["beta2"]
+        )
+
+        m_hat, v_hat = bias_correct_moments(
+            adam_state,
+            inner_hparams["beta1"],
+            inner_hparams["beta2"]
+        )
+
+        params = adam_param_step(
+            params,
+            m_hat,
+            v_hat,
+            inner_hparams["lr"],
+            inner_hparams["eps"]
+        )
+
+        params = decoupled_weight_decay(
+            params,
+            inner_hparams["lr"],
+            inner_hparams["weight_decay"]
+        )
+
+        step_loss = float(np.mean(worker_losses))
+        history["step_losses"].append(step_loss)
+
+    return params, history
 
 # Step 28 - evaluate_loss
 def evaluate_loss(params, x, y):

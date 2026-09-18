@@ -36,7 +36,7 @@ python scaffold.py
 - [x] **24.** compute_outer_gradient
 - [x] **25.** run_diloco_round
 - [x] **26.** train_diloco
-- [ ] **27.** train_synchronous_baseline
+- [x] **27.** train_synchronous_baseline
 - [x] **28.** evaluate_loss
 - [x] **29.** classification_accuracy
 - [x] **30.** communication_savings
